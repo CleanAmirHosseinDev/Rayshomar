@@ -6,11 +6,9 @@ import {SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS} from "@eth-infinitism-acc
 import {IEntryPoint} from "@eth-infinitism-account-abstraction/interfaces/IEntryPoint.sol";
 import {UserOperationLib} from "@eth-infinitism-account-abstraction/core/UserOperationLib.sol";
 import {PackedUserOperation} from "@eth-infinitism-account-abstraction/interfaces/PackedUserOperation.sol";
-
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-
 import {TVoting} from "./TVoting.sol";
 
 contract VoterAccount is IAccount, Ownable {

@@ -1,7 +1,6 @@
 {
   "name": "rayshomar-test",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "start": "nodemon src/app.js",
@@ -34,5 +33,7 @@
     "jest": "^29.7.0",
     "nodemon": "^2.0.9",
     "supertest": "^6.3.3"
-  }
+  },
+  "keywords": [],
+  "description": ""
 }
