@@ -2,7 +2,6 @@
 pragma solidity ^0.8.26;
 
 import {IAccount} from "@eth-infinitism-account-abstraction/interfaces/IAccount.sol";
-import {IAccountExecute} from "@eth-infinitism-account-abstraction/interfaces/IAccountExecute.sol";
 import {SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS} from "@eth-infinitism-account-abstraction/core/Helpers.sol";
 import {IEntryPoint} from "@eth-infinitism-account-abstraction/interfaces/IEntryPoint.sol";
 import {UserOperationLib} from "@eth-infinitism-account-abstraction/core/UserOperationLib.sol";
@@ -60,7 +59,11 @@ contract VoterAccount is IAccount, Ownable {
     function _validateSignature(
         PackedUserOperation calldata userOp,
         bytes32 userOpHash
-    ) internal virtual returns (uint256 validationData) {
+    ) internal view virtual returns (uint256 validationData) {
+        // SECURITY: This is a highly centralized design. The i_rayshomarAddress has control
+        // over all voter accounts. If this key is compromised, the entire election is compromised.
+        // For a decentralized system, each VoterAccount should have its own owner,
+        // and this function should check for the owner's signature.
         bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(
             userOpHash
         );
@@ -77,6 +80,8 @@ contract VoterAccount is IAccount, Ownable {
      * the uint256[] _candidates in encoded in calldata field of PackedUserOperation
      * */
     function execute(uint256[] calldata _candidates) external {
+        // SECURITY: This function must only be callable by the EntryPoint.
+        _requireFromEntryPoint();
         // call _vote
         i_tVoting.vote(_candidates);
     }

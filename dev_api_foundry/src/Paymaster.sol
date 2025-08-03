@@ -30,8 +30,8 @@ contract Paymaster is IPaymaster, Ownable {
 
     constructor(address _entryPoint, bytes32 _merkleRoot) Ownable(msg.sender) {
         entryPoint = IEntryPoint(_entryPoint);
-        // _validateEntryPointInterface(entryPoint);
-        i_merkleRoot = _merkleRoot;// @audit does this really work????
+        _validateEntryPointInterface(entryPoint);
+        i_merkleRoot = _merkleRoot;
     }
 
     receive() external payable {}
@@ -105,9 +105,7 @@ contract Paymaster is IPaymaster, Ownable {
         address voterAddress,
         bytes32[] memory merkleProof
     ) public view returns (bool) {
-        bytes32 leaf = keccak256(
-            bytes.concat(keccak256(abi.encode(voterAddress)))
-        );
+        bytes32 leaf = keccak256(abi.encodePacked(voterAddress));
         return MerkleProof.verify(merkleProof, i_merkleRoot, leaf);
     }
 

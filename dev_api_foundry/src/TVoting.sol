@@ -4,8 +4,6 @@ pragma solidity ^0.8.26;
 /*//////////////////////////////////////////////////////////////
                            IMPORT STATEMENTS
     //////////////////////////////////////////////////////////////*/
-import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-
 
 error NotOwner__TVoting();
 error NotVoter__TVoting();
@@ -69,6 +67,10 @@ contract TVoting {
         address[] memory _voters,
         uint256[] memory _numOfVotes
     ) public onlyOwner {
+        require(
+            _voters.length == _numOfVotes.length,
+            "TVoting: voter and vote count array lengths must match"
+        );
         for (uint i = 0; i < _voters.length; i++) {
             addrToVoter[_voters[i]].isVoter = true;
             addrToVoter[_voters[i]].votesLeft = int256(_numOfVotes[i]);
