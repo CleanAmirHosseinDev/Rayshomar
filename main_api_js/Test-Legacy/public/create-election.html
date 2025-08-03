@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Election</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="castVote">Cast Vote</a>
+    <a href="create-election">Create Election</a>
+    <a href="getRegisteredElections">Get Registered Election</a>
+    <a href="login">Login</a>
+    <a href="register">Register</a>
+    <a href="voteResults">Vote Result</a>
+  </div>
+  <div class="container">
+    <h1>Create Election</h1>
+    <form id="createElectionForm">
+      <label for="name">Election Name:</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="numOfCandidates">Number of Candidates:</label>
+      <input type="number" id="numOfCandidates" name="numOfCandidates" required />
+
+      <label for="voters">Voters (comma-separated emails):</label>
+      <input type="text" id="voters" name="voters" required />
+
+      <label for="numOfVotes">Number of Votes per Voter (comma-separated of each voters):</label>
+      <input type="text" id="numOfVotes" name="numOfVotes" required />
+
+      <button type="submit">Create Election</button>
+    </form>
+  </div>
+  <script src="js/createElection.js"></script>
+</body>
+
+</html>

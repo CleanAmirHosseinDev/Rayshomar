@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  production-api:
+    build: .
+    container_name: rayshomar-blockchain-api
+    ports:
+      - "5000:5000"
+    env_file:
+      - main_api_js/.env
+    environment:
+      - NODE_ENV=production
+    command: npm start
+    volumes:
+      - ./main_api_js:/usr/src/app/main_api_js
+      - ./dev_api_foundry:/usr/src/app/dev_api_foundry
+
+  test-api:
+    build: .
+    container_name: rayshomar-blockchain-test-api
+    ports:
+      - "5001:5000"
+    env_file:
+      - main_api_js/.env
+    environment:
+      - NODE_ENV=test
+    command: npm run testStart
+    volumes:
+      - ./main_api_js:/usr/src/app/main_api_js
+      - ./dev_api_foundry:/usr/src/app/dev_api_foundry

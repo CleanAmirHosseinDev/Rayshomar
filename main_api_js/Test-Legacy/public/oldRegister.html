@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="castVote">Cast Vote</a>
+        <a href="create-election">Create Election</a>
+        <a href="getRegisteredElections">Get Registered Election</a>
+        <a href="login">Login</a>
+        <a href="register">Register</a>
+        <a href="voteResults">Vote Result</a>
+    </div>
+    <div class="container">
+        <h1>Register</h1>
+        <form id="registerForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+
+
+            <button type="submit">Register</button>
+        </form>
+
+        </br>
+
+        <button id="connectButton">Connect Wallet</button>
+
+        <p>Already have an account? <a href="login">Login here</a></p>
+    </div>
+    <script type="module" src="js/register.js"></script>
+</body>
+
+</html>

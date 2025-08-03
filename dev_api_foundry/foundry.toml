@@ -1,0 +1,21 @@
+[profile.default]
+solc_version = "0.8.26"
+src = "src"
+out = "out"
+libs = ["dependencies"]
+
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+fs_permissions = [
+    { access = "read", path = "./election_data" },
+    { access = "read", path = "./reports" },
+    { access = "read", path = "./broadcast" },
+    { access = "read", path = "./TransferData" },
+]
+
+gas_reports = ["*"]
+    
+[dependencies]
+forge-std = "1.9.2"
+"@openzeppelin-contracts" = "5.0.2"
+eth-infinitism-account-abstraction = "0.7"
