@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   production-api:
@@ -6,8 +6,9 @@ services:
     container_name: rayshomar-blockchain-api
     ports:
       - "5000:5000"
-    env_file:
-      - main_api_js/.env
+    # اگر فایل .env ندارید، این خط رو کامنت کنید
+    # env_file:
+    #   - main_api_js/.env
     environment:
       - NODE_ENV=production
     command: npm start
@@ -20,8 +21,9 @@ services:
     container_name: rayshomar-blockchain-test-api
     ports:
       - "5001:5000"
-    env_file:
-      - main_api_js/.env
+    # اگر فایل .env ندارید، این خط رو کامنت کنید
+    # env_file:
+    #   - main_api_js/.env
     environment:
       - NODE_ENV=test
     command: npm run testStart
