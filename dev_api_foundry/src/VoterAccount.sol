@@ -1,91 +1,47 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import {IAccount} from "@eth-infinitism-account-abstraction/interfaces/IAccount.sol";
-import {IAccountExecute} from "@eth-infinitism-account-abstraction/interfaces/IAccountExecute.sol";
-import {SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS} from "@eth-infinitism-account-abstraction/core/Helpers.sol";
-import {IEntryPoint} from "@eth-infinitism-account-abstraction/interfaces/IEntryPoint.sol";
-import {UserOperationLib} from "@eth-infinitism-account-abstraction/core/UserOperationLib.sol";
+import {BaseAccount} from "@eth-infinitism-account-abstraction/core/BaseAccount.sol";
 import {PackedUserOperation} from "@eth-infinitism-account-abstraction/interfaces/PackedUserOperation.sol";
-
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+import {IEntryPoint} from "@eth-infinitism-account-abstraction/interfaces/IEntryPoint.sol";
+import {SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS} from "@eth-infinitism-account-abstraction/core/Helpers.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {TVoting} from "./TVoting.sol";
 
-contract VoterAccount is IAccount, Ownable {
-    using UserOperationLib for PackedUserOperation;
-
-    IEntryPoint private immutable i_entryPoint;
+contract VoterAccount is BaseAccount, Ownable {
     TVoting private i_tVoting;
     address private i_rayshomarAddress;
+    IEntryPoint private immutable i_entryPoint;
 
     constructor(address _entryPoint) Ownable(msg.sender) {
         i_entryPoint = IEntryPoint(_entryPoint);
     }
 
-    function recieve() external payable {}
-
-    function _requireFromEntryPoint() internal view virtual {
-        require(
-            msg.sender == address(i_entryPoint),
-            "account: not from EntryPoint"
-        );
+    function entryPoint() public view override returns (IEntryPoint) {
+        return i_entryPoint;
     }
 
-    /**
-     * @notice This is the function called by the entry point
-     * @param userOp user operation -> see PackedUserOperation for more details
-     * @param userOpHash hash of the (user operation, entrypoint address, chainID) except the signiture of the userOP
-     *  param uint256 the cost of the userOperation(payed by paymaster)
-     * @return  validationData which might be 0 for success and 1 for falure
-     * @dev error handling and event emission is not implemented yet
-     */
-    function validateUserOp(
-        PackedUserOperation calldata userOp,
-        bytes32 userOpHash,
-        uint256
-    ) external virtual override returns (uint256 validationData) {
-        _requireFromEntryPoint();
-        validationData = _validateSignature(userOp, userOpHash);
+    modifier onlyEntryPoint() {
+        require(msg.sender == address(entryPoint()), "Account: not from entry point");
+        _;
     }
 
-    /**
-     * @notice this is the validation process:
-     * checks if the signer of the userOp is the rayshomarAddress
-     * @param userOp PackedUserOperation
-     * @param userOpHash hash of the (user operation, entrypoint address, chainID) except the signiture of the userOP
-     */
     function _validateSignature(
         PackedUserOperation calldata userOp,
         bytes32 userOpHash
-    ) internal virtual returns (uint256 validationData) {
-        bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(
-            userOpHash
-        );
-        address signer = ECDSA.recover(ethSignedMessageHash, userOp.signature);
-        // owner should be change to voter rayshomar public key
+    ) internal view virtual override returns (uint256 validationData) {
+        address signer = ECDSA.recover(userOpHash, userOp.signature);
         if (signer != i_rayshomarAddress) {
             return SIG_VALIDATION_FAILED;
         }
         return SIG_VALIDATION_SUCCESS;
     }
 
-    /**
-     * @notice execution function which is called by the entrypoint and passes the vote to TVoting contract
-     * the uint256[] _candidates in encoded in calldata field of PackedUserOperation
-     * */
-    function execute(uint256[] calldata _candidates) external {
-        // call _vote
+    function executeVote(uint256[] calldata _candidates) external onlyEntryPoint {
         i_tVoting.vote(_candidates);
     }
 
-    /**
-     * @notice sets the rayshomar address and the TVoting contract and is called by the owner(rayshomar)
-     * @param _rayshomarAddress local rayshomar address of the signer of the userOp
-     * @param _tVoting the address of the TVoting contract
-     */
     function setForNewElection(
         address _rayshomarAddress,
         address _tVoting
@@ -93,7 +49,4 @@ contract VoterAccount is IAccount, Ownable {
         i_rayshomarAddress = _rayshomarAddress;
         i_tVoting = TVoting(_tVoting);
     }
-
-    // TODO : reset function for new election
-    
 }
