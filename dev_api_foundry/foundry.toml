@@ -1,5 +1,5 @@
 [profile.default]
-solc_version = "0.8.26"
+solc_version = "0.8.28"
 src = "src"
 out = "out"
 libs = ["dependencies"]
@@ -16,6 +16,6 @@ fs_permissions = [
 gas_reports = ["*"]
     
 [dependencies]
-forge-std = "1.9.2"
-"@openzeppelin-contracts" = "5.0.2"
-eth-infinitism-account-abstraction = "0.7"
+forge-std = "1.10.0"
+"@openzeppelin-contracts" = "5.1.0"
+eth-infinitism-account-abstraction = "0.8.0"
