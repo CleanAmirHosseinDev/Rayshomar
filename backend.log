@@ -1,0 +1,4 @@
+shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+--- Changing directory to /app/main_api_js ---
+chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+--- Running npm install ---

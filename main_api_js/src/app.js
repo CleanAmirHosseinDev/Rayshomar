@@ -9,6 +9,7 @@ const deployVoterAccountsRouter = require("./routes/deployVoterAccountContract")
 const startElectionFunctionRouter = require("./routes/startElectionFunction");
 const setForNewElectionFunctionRouter = require("./routes/setForNewElectionFunction");
 const deployPaymasterContractRouter = require("./routes/deployPaymasterContract");
+const electionsRouter = require("./routes/elections");
 
 //connect middlewares
 const electionContractDataFile = require("./middleware/createElectionContractDataFile");
@@ -18,6 +19,10 @@ const paymasterContractDataFile = require("./middleware/createPaymasterContractD
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
+// User-facing API routes
+app.use("/api/v1/elections", electionsRouter);
+
+// Admin routes
 app.use(
     "/StartElection",
     electionContractDataFile,
