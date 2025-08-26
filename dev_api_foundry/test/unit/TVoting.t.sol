@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
 import "@forge-std/Test.sol";
 import "../../src/TVoting.sol";
@@ -64,7 +64,6 @@ contract TVotingTest is Test {
         candidates[0] = 1;
         candidates[1] = 1;
         tVoting.vote(candidates);
-        
 
         vm.prank(voter1);
         vm.expectRevert(MoreThanVotesLeft__TVoting.selector);

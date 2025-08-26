@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.30;
 
 import {BaseAccount} from "@eth-infinitism-account-abstraction/core/BaseAccount.sol";
 import {PackedUserOperation} from "@eth-infinitism-account-abstraction/interfaces/PackedUserOperation.sol";
@@ -23,7 +23,10 @@ contract VoterAccount is BaseAccount, Ownable {
     }
 
     modifier onlyEntryPoint() {
-        require(msg.sender == address(entryPoint()), "Account: not from entry point");
+        require(
+            msg.sender == address(entryPoint()),
+            "Account: not from entry point"
+        );
         _;
     }
 
@@ -38,7 +41,9 @@ contract VoterAccount is BaseAccount, Ownable {
         return SIG_VALIDATION_SUCCESS;
     }
 
-    function executeVote(uint256[] calldata _candidates) external onlyEntryPoint {
+    function executeVote(
+        uint256[] calldata _candidates
+    ) external onlyEntryPoint {
         i_tVoting.vote(_candidates);
     }
 

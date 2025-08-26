@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.30;
 
 /*//////////////////////////////////////////////////////////////
                            IMPORT STATEMENTS
     //////////////////////////////////////////////////////////////*/
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-
 
 error NotOwner__TVoting();
 error NotVoter__TVoting();
@@ -22,10 +21,9 @@ error InvalidNumOfCandidates__TVoting();
 // TODO : write a enum for the states of the election:
 // not started
 // open
-// finished 
+// finished
 
 contract TVoting {
-
     /*//////////////////////////////////////////////////////////////
                            Types and Variables
     //////////////////////////////////////////////////////////////*/
@@ -53,7 +51,6 @@ contract TVoting {
         _;
     }
 
-
     event VoteEmmited(address indexed voter, uint256[] indexed vote);
 
     /*//////////////////////////////////////////////////////////////
@@ -74,7 +71,6 @@ contract TVoting {
             addrToVoter[_voters[i]].votesLeft = int256(_numOfVotes[i]);
         }
     }
-
 
     /*//////////////////////////////////////////////////////////////
                               Vote Functions

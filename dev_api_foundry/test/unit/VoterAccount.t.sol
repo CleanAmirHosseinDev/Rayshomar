@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
 import {Test, console} from "@forge-std/Test.sol";
 import {VoterAccount} from "../../src/VoterAccount.sol";
@@ -16,9 +16,12 @@ contract VoterAccountTest is Test {
     TVoting public tVoting;
     MakePackedUserOp public makePackedUserOp;
 
-    address internal constant VOTER_ELECTION_OWNER = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
-    uint256 internal constant VOTER_PKEY = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
-    address internal constant BUNDLER_ACC = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
+    address internal constant VOTER_ELECTION_OWNER =
+        0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    uint256 internal constant VOTER_PKEY =
+        0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+    address internal constant BUNDLER_ACC =
+        0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
 
     function setUp() public {
         entryPoint = new EntryPoint();
@@ -26,7 +29,11 @@ contract VoterAccountTest is Test {
         factory = new VoterAccountFactory(address(entryPoint));
 
         // Deploy a VoterAccount for our test voter
-        voterAccount = factory.createAccount(VOTER_ELECTION_OWNER, address(tVoting), 0);
+        voterAccount = factory.createAccount(
+            VOTER_ELECTION_OWNER,
+            address(tVoting),
+            0
+        );
 
         // Register the new VoterAccount in the TVoting contract
         address[] memory voterAccounts = new address[](1);
@@ -48,14 +55,15 @@ contract VoterAccountTest is Test {
         );
 
         // 2. Generate and sign the UserOperation (without a paymaster)
-        PackedUserOperation memory userOp = makePackedUserOp.generateSignedUserOperation(
-            address(voterAccount),
-            callData,
-            address(0), // No paymaster
-            "", // No paymaster data
-            address(entryPoint),
-            VOTER_PKEY
-        );
+        PackedUserOperation memory userOp = makePackedUserOp
+            .generateSignedUserOperation(
+                address(voterAccount),
+                callData,
+                address(0), // No paymaster
+                "", // No paymaster data
+                address(entryPoint),
+                VOTER_PKEY
+            );
 
         // 3. Fund the account with enough ETH to pay for the transaction
         vm.deal(address(voterAccount), 1 ether);

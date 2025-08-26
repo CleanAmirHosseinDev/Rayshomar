@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.30;
 
 import {VoterAccount} from "./VoterAccount.sol";
 import {IEntryPoint} from "@eth-infinitism-account-abstraction/interfaces/IEntryPoint.sol";
@@ -37,7 +37,10 @@ contract VoterAccountFactory {
     ) external returns (VoterAccount account) {
         // امنیتی: بررسی می‌شود که آیا این تابع توسط خود EntryPoint فراخوانی شده است یا خیر.
         // این کار از حملات front-running روی initCode جلوگیری می‌کند.
-        require(msg.sender == address(entryPoint.senderCreator()), "Factory: not from entry point");
+        require(
+            msg.sender == address(entryPoint.senderCreator()),
+            "Factory: not from entry point"
+        );
 
         bytes32 salt = bytes32(_salt);
         bytes memory bytecode = type(VoterAccount).creationCode;
@@ -46,7 +49,12 @@ contract VoterAccountFactory {
 
         address addr;
         assembly {
-            addr := create2(0, add(fullBytecode, 0x20), mload(fullBytecode), salt)
+            addr := create2(
+                0,
+                add(fullBytecode, 0x20),
+                mload(fullBytecode),
+                salt
+            )
         }
         require(addr != address(0), "CREATE2_FAILED");
 
@@ -71,11 +79,20 @@ contract VoterAccountFactory {
         bytes memory constructorArgs = abi.encode(address(entryPoint));
         bytes memory fullBytecode = abi.encodePacked(bytecode, constructorArgs);
 
-        return address(uint160(uint(keccak256(abi.encodePacked(
-            bytes1(0xff),
-            address(this),
-            salt,
-            keccak256(fullBytecode)
-        )))));
+        return
+            address(
+                uint160(
+                    uint(
+                        keccak256(
+                            abi.encodePacked(
+                                bytes1(0xff),
+                                address(this),
+                                salt,
+                                keccak256(fullBytecode)
+                            )
+                        )
+                    )
+                )
+            );
     }
 }

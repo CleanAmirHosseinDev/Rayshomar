@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.30;
 
 import {BasePaymaster} from "@eth-infinitism-account-abstraction/core/BasePaymaster.sol";
 import {PackedUserOperation} from "@eth-infinitism-account-abstraction/interfaces/PackedUserOperation.sol";
@@ -31,7 +31,7 @@ contract Paymaster is BasePaymaster {
         returns (bytes memory context, uint256 validationData)
     {
         address signer = _validateSignature(userOp, userOpHash);
-        (bytes32[] memory merkleProof) = _parsePaymasterData(
+        bytes32[] memory merkleProof = _parsePaymasterData(
             userOp.paymasterAndData
         );
         bool isValidVoter = _checkVoter(signer, merkleProof);
@@ -46,8 +46,7 @@ contract Paymaster is BasePaymaster {
         bytes calldata,
         uint256,
         uint256
-    ) internal pure override {
-    }
+    ) internal pure override {}
 
     function _validateSignature(
         PackedUserOperation calldata userOp,
